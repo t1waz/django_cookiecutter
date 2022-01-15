@@ -1,0 +1,11 @@
+.idea/
+.venv/
+
+.envs
+
+app/*/__pycache__/
+app/*/migrations/__pycache__/
+app/static
+app/*/test/__pycache__
+app/.coverage
+

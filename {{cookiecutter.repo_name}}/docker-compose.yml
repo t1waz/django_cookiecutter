@@ -1,0 +1,69 @@
+version: '3'
+
+volumes:
+  backend_data: {}
+
+
+services:
+  app: &app
+    build:
+      context: .
+      dockerfile: compose/backend/Dockerfile
+    command: >
+      sh -c "python manage.py migrate --settings=settings.development &&
+             python manage.py collectstatic --settings=settings.development --noinput"
+    env_file:
+      - .envs/.development
+    volumes:
+    - ./app:/app
+    depends_on:
+      - db
+      - redis
+
+  backend:
+    <<: *app
+    command: python manage.py runserver 0.0.0.0:8000 --settings=settings.development
+
+  celery:
+    <<: *app
+    command: celery -A backend worker -l INFO
+
+  celery-beat:
+    <<: *app
+    command: celery -A backend beat -l debug --pidfile=
+
+  celery-flower:
+    image: mher/flower:latest
+    environment:
+      - CELERY_BROKER_URL=redis://redis:6379/0
+      - FLOWER_PORT=8888
+    ports:
+      - 8888:8888
+
+  db:
+    image: postgres:latest
+    volumes:
+      - backend_data:/var/lib/postgresql/data
+    env_file:
+      - .envs/.development
+
+  redis:
+    build:
+      context: .
+      dockerfile: compose/redis/Dockerfile
+    command: sh -c "redis-server /config/redis.conf && redis-cli flushall"
+    env_file:
+      - .envs/.development
+    sysctls:
+      net.core.somaxconn: '511'
+
+  nginx:
+    build:
+      context: .
+      dockerfile: compose/nginx/Dockerfile
+    volumes:
+    - ./app/static:/static
+    ports:
+      - 127.0.0.1:8000:8000
+    depends_on:
+      - app

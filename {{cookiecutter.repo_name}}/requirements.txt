@@ -1,0 +1,10 @@
+black
+celery
+Django
+flake8
+psycopg2
+pytest-django
+redis
+djangorestframework
+markdown
+django-filter

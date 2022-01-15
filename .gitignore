@@ -1,0 +1,15 @@
+.idea/
+.venv/
+{{cookiecutter.repo_name}}/.venv
+
+.envs
+{{cookiecutter.repo_name}}/.envs
+
+{{cookiecutter.repo_name}}/app/*/__pycache__/
+{{cookiecutter.repo_name}}/app/*/migrations/__pycache__/
+{{cookiecutter.repo_name}}/app/static
+{{cookiecutter.repo_name}}/app/*/test/__pycache__
+{{cookiecutter.repo_name}}/app/.coverage
+{{cookiecutter.repo_name}}/app/backend/__pycache__/
+{{cookiecutter.repo_name}}/app/settings/__pycache__/
+{{cookiecutter.repo_name}}/app/users/__pycache__/
