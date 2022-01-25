@@ -9,3 +9,4 @@ app/static
 app/*/test/__pycache__
 app/.coverage
 
+app/celerybeat-schedule
